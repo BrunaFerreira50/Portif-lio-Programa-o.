@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[Seu Nome] — Portfólio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0b10;
+    --panel: rgba(26, 29, 38, 0.55);
+    --panel-solid: #171922;
+    --glass-border: rgba(255,255,255,0.08);
+    --line: rgba(255,255,255,0.08);
+    --text: #f3f4f8;
+    --muted: #9298ab;
+    --amber: #f0ab4d;
+    --amber-soft: rgba(240,171,77,0.14);
+    --teal: #52d1c4;
+    --teal-soft: rgba(82,209,196,0.14);
+    --red: #ef7a72;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', sans-serif;
+    --radius: 18px;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }
+  }
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(880px 520px at 88% -8%, rgba(240,171,77,0.16), transparent 60%),
+      radial-gradient(760px 480px at 8% 8%, rgba(82,209,196,0.14), transparent 60%),
+      radial-gradient(1000px 700px at 50% 110%, rgba(82,209,196,0.08), transparent 60%),
+      var(--bg);
+    background-attachment:fixed;
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{ color:inherit; }
+  ::selection{ background:var(--amber); color:#1a1400; }
+
+  /* ---------- Nav ---------- */
+  .tabs{
+    position:sticky; top:0; z-index:30;
+    display:flex; gap:4px;
+    background:rgba(10,11,16,0.7);
+    backdrop-filter:blur(16px) saturate(140%);
+    -webkit-backdrop-filter:blur(16px) saturate(140%);
+    border-bottom:1px solid var(--line);
+    padding:0 16px;
+    overflow-x:auto;
+  }
+  .tabs a{
+    position:relative;
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:var(--muted);
+    text-decoration:none;
+    padding:16px 18px;
+    white-space:nowrap;
+    transition:color .2s ease;
+  }
+  .tabs a::after{
+    content:''; position:absolute; left:14px; right:14px; bottom:0; height:2px;
+    background:linear-gradient(90deg, var(--amber), var(--teal));
+    transform:scaleX(0); transform-origin:left; transition:transform .25s ease;
+    border-radius:2px 2px 0 0;
+  }
+  .tabs a:hover{ color:var(--text); }
+  .tabs a.active{ color:var(--text); }
+  .tabs a.active::after{ transform:scaleX(1); }
+  .tabs a:focus-visible{ outline:2px solid var(--teal); outline-offset:2px; border-radius:4px; }
+
+  section{ padding:88px 20px; max-width:880px; margin:0 auto; }
+  section#sobre{ padding-top:72px; }
+
+  .reveal{
+    opacity:0; transform:translateY(22px);
+    transition:opacity .6s ease, transform .6s ease;
+  }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  .win{
+    background:var(--panel);
+    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+    border:1px solid var(--glass-border);
+    border-radius:var(--radius);
+    overflow:hidden;
+    box-shadow:0 30px 80px -30px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+  .win-bar{
+    display:flex; align-items:center; gap:8px;
+    padding:12px 16px;
+    background:rgba(255,255,255,0.03);
+    border-bottom:1px solid var(--line);
+  }
+  .dot{ width:10px; height:10px; border-radius:50%; opacity:.9; }
+  .dot.r{ background:var(--red); } .dot.y{ background:var(--amber); } .dot.g{ background:var(--teal); }
+  .win-title{ font-family:var(--mono); font-size:12px; color:var(--muted); margin-left:8px; }
+  .win-body{ padding:30px 32px; font-family:var(--mono); font-size:14px; }
+
+  .prompt{ color:var(--teal); }
+  .out{ color:var(--text); white-space:pre-wrap; }
+  .cursor{
+    display:inline-block; width:8px; height:16px; background:var(--amber);
+    margin-left:2px; vertical-align:middle; animation:blink 1s steps(1) infinite;
+    box-shadow:0 0 12px rgba(240,171,77,0.7);
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  h2.eyebrow{
+    font-family:var(--mono); font-size:12.5px; letter-spacing:.08em;
+    color:var(--amber); margin:0 0 10px; text-transform:uppercase;
+  }
+  h1{
+    font-family:var(--sans); font-weight:800; font-size:clamp(30px,5.4vw,46px);
+    margin:0 0 20px; line-height:1.15; letter-spacing:-0.02em;
+  }
+  h1 .grad{
+    background:linear-gradient(100deg, var(--amber) 10%, var(--teal) 90%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  h1.mono-title{ font-family:var(--mono); font-size:clamp(24px,4vw,32px); font-weight:700; }
+
+  p.lead{ color:var(--muted); font-size:16.5px; max-width:60ch; }
+
+  /* ---------- Skills ---------- */
+  .pkg-key{ color:var(--teal); }
+  .pkg-str{ color:var(--amber); }
+  .pkg-punc{ color:var(--muted); }
+  .indent{ padding-left:22px; }
+
+  .chip-cloud{ display:flex; flex-wrap:wrap; gap:10px; margin-top:26px; }
+  .chip{
+    font-family:var(--mono); font-size:13px;
+    padding:8px 16px; border-radius:100px;
+    background:var(--panel); border:1px solid var(--glass-border);
+    backdrop-filter:blur(10px);
+    transition:transform .2s ease, border-color .2s ease, background .2s ease;
+  }
+  .chip:hover{
+    transform:translateY(-3px);
+    border-color:var(--teal);
+    background:var(--teal-soft);
+  }
+
+  /* ---------- Projects grid ---------- */
+  .proj-grid{
+    display:grid; grid-template-columns:repeat(2, 1fr);
+    gap:20px; margin-top:32px;
+  }
+  @media (max-width:720px){ .proj-grid{ grid-template-columns:1fr; } }
+
+  .card{
+    position:relative;
+    background:var(--panel);
+    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+    border:1px solid var(--glass-border);
+    border-radius:var(--radius);
+    padding:26px 24px;
+    overflow:hidden;
+    transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  .card::before{
+    content:''; position:absolute; inset:0; padding:1px; border-radius:var(--radius);
+    background:linear-gradient(135deg, var(--amber), transparent 40%, var(--teal));
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+    opacity:0; transition:opacity .3s ease;
+    pointer-events:none;
+  }
+  .card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 24px 60px -20px rgba(0,0,0,.6);
+  }
+  .card:hover::before{ opacity:.7; }
+
+  .commit-hash{ font-family:var(--mono); font-size:11.5px; color:var(--amber); letter-spacing:.02em; }
+  .commit-msg{ font-family:var(--sans); font-weight:700; font-size:17px; margin:8px 0 10px; letter-spacing:-0.01em; }
+  .commit-desc{ color:var(--muted); font-size:14.5px; margin:0 0 16px; }
+  .tech-row{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+  .tech{
+    font-family:var(--mono); font-size:11px; color:var(--text);
+    background:rgba(255,255,255,0.05); border:1px solid var(--glass-border);
+    padding:4px 10px; border-radius:100px;
+  }
+  .links{ display:flex; gap:10px; flex-wrap:wrap; }
+  .links a{
+    font-family:var(--mono); font-size:12.5px; text-decoration:none;
+    color:var(--bg); background:linear-gradient(100deg, var(--amber), var(--teal));
+    padding:7px 14px; border-radius:100px; font-weight:600;
+    transition:filter .2s ease, transform .2s ease;
+  }
+  .links a:hover, .links a:focus-visible{ filter:brightness(1.1); transform:translateY(-2px); }
+
+  .idea-flag{
+    display:inline-block; font-family:var(--mono); font-size:10.5px;
+    color:var(--bg); background:var(--amber);
+    padding:3px 8px; border-radius:6px; margin-left:8px; vertical-align:middle;
+    box-shadow:0 4px 14px -4px rgba(240,171,77,0.6);
+  }
+
+  /* ---------- Contact ---------- */
+  .var-name{ color:var(--teal); }
+  .var-val{ color:var(--amber); }
+  .fn{ color:#c9a4ff; }
+  .comment{ color:var(--muted); }
+
+  .contact-cta{
+    display:flex; gap:14px; flex-wrap:wrap; margin-top:24px;
+  }
+  .contact-cta a{
+    font-family:var(--mono); font-size:13.5px; text-decoration:none;
+    padding:12px 22px; border-radius:100px; font-weight:600;
+    border:1px solid var(--glass-border);
+    transition:transform .2s ease, border-color .2s ease, background .2s ease;
+  }
+  .contact-cta a.primary{
+    background:linear-gradient(100deg, var(--amber), var(--teal)); color:var(--bg);
+  }
+  .contact-cta a:not(.primary):hover{ border-color:var(--teal); background:var(--teal-soft); }
+  .contact-cta a:hover{ transform:translateY(-2px); }
+
+  footer{
+    text-align:center; padding:50px 20px 70px;
+    color:var(--muted); font-family:var(--mono); font-size:12px;
+  }
+
+  @media (max-width:600px){
+    section{ padding:56px 16px; }
+    .win-body{ padding:20px; font-size:13px; }
+    .card{ padding:22px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="tabs" id="tabs">
+  <a href="#sobre" class="active">sobre.md</a>
+  <a href="#skills">habilidades.json</a>
+  <a href="#projetos">projetos/</a>
+  <a href="#contato">contato.sh</a>
+</nav>
+
+<!-- ============ SOBRE ============ -->
+<section id="sobre">
+  <div class="win reveal">
+    <div class="win-bar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="win-title">sobre.md — terminal</span>
+    </div>
+    <div class="win-body">
+      <div><span class="prompt">$</span> whoami</div>
+      <h1 style="margin-top:16px;">Bruna Ferreira <span class="grad">· Estudante de Programação</span></h1>
+      <div style="margin-top:24px;">Sobre mim</div>
+      <p class="out" style="margin-top:10px;">Olá! Eu sou a Bruna, tenho 24 anos e sou estudante de Análise e Desenvolvimento de Sistemas, com conclusão prevista para dezembro de 2027. Tenho grande interesse pela área de tecnologia e busco constantemente desenvolver meus conhecimentos em programação, dados e inovação.
+
+Possuo conhecimentos em Python, Java, HTML, CSS, Excel e Power BI, além de uma base em bancos de dados. Atualmente, estou estudando inglês em nível básico, buscando aprimorar continuamente minha comunicação e ampliar meus conhecimentos, especialmente para acompanhar conteúdos e oportunidades na área de tecnologia.
+
+Sou uma pessoa analítica, dedicada e curiosa, que gosta de aprender, resolver problemas e transformar ideias em soluções. Meu objetivo é continuar evoluindo profissionalmente e unir meus conhecimentos de tecnologia e negócios para contribuir na criação de soluções eficientes e inovadoras.<span class="cursor" aria-hidden="true"></span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SKILLS ============ -->
+<section id="skills">
+  <h2 class="eyebrow reveal">// 02</h2>
+  <h1 class="mono-title reveal">Habilidades/soft skills</h1>
+  <div class="win reveal">
+    <div class="win-bar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="win-title">habilidades.json</span>
+    </div>
+    <div class="win-body">
+<div class="pkg-punc">{</div>
+<div class="indent"><span class="pkg-key">"linguagens"</span><span class="pkg-punc">:</span> [<span class="pkg-str">"Python"</span>, <span class="pkg-str">"Java"</span>, <span class="pkg-str">"HTML/CSS"</span>]<span class="pkg-punc">,</span></div>
+<div class="indent"><span class="pkg-key">"ferramentas"</span><span class="pkg-punc">:</span> [<span class="pkg-str">"Excel"</span>, <span class="pkg-str">"Power BI"</span>, <span class="pkg-str">"Git"</span>, <span class="pkg-str">"GitHub"</span>]<span class="pkg-punc">,</span></div>
+<div class="indent"><span class="pkg-key">"aprendendo"</span><span class="pkg-punc">:</span> [<span class="pkg-str">"Bancos de dados"</span>]<span class="pkg-punc">,</span></div>
+<div class="indent"><span class="pkg-key">"idiomas"</span><span class="pkg-punc">:</span> [<span class="pkg-str">"Português (nativo)"</span>, <span class="pkg-str">"Inglês (aprimorando do básico para o intermediário)"</span>]</div>
+<div class="pkg-punc">}</div>
+    </div>
+  </div>
+  <div class="chip-cloud reveal">
+    <span class="chip">Python</span>
+    <span class="chip">Java</span>
+    <span class="chip">HTML/CSS</span>
+    <span class="chip">Excel</span>
+    <span class="chip">Power BI</span>
+    <span class="chip">Git &amp; GitHub</span>
+    <span class="chip">Bancos de dados</span>
+  </div>
+</section>
+
+<!-- ============ PROJETOS ============ -->
+<section id="projetos">
+  <h2 class="eyebrow reveal">// 03</h2>
+  <h1 class="mono-title reveal">Projetos</h1>
+
+  <div class="proj-grid">
+    <div class="card reveal">
+      <div class="commit-hash">commit a3f9c21</div>
+      <div class="commit-msg">Lista de tarefas com persistência local</div>
+      <p class="commit-desc">CRUD completo de tarefas (criar, marcar como concluída, editar, excluir), com dados salvos no navegador via LocalStorage. Bom primeiro projeto para fixar manipulação de DOM e lógica de estado.</p>
+      <div class="tech-row"><span class="tech">HTML</span><span class="tech">CSS</span><span class="tech">JavaScript</span><span class="tech">LocalStorage</span></div>
+      <div class="links"><a href="#">Ver código →</a><a href="#">Demo →</a></div>
+    </div>
+
+    <div class="card reveal">
+      <div class="commit-hash">commit 7b2e0f4</div>
+      <div class="commit-msg">Painel de previsão do tempo</div>
+      <p class="commit-desc">Busca dados de uma API pública de clima e exibe temperatura, umidade e previsão dos próximos dias por cidade. Pratica consumo de API, requisições assíncronas e tratamento de erros.</p>
+      <div class="tech-row"><span class="tech">JavaScript</span><span class="tech">Fetch API</span><span class="tech">CSS Grid</span></div>
+      <div class="links"><a href="#">Ver código →</a><a href="#">Demo →</a></div>
+    </div>
+
+    <div class="card reveal">
+      <div class="commit-hash">commit c815d92</div>
+      <div class="commit-msg">Controle de gastos pessoais</div>
+      <p class="commit-desc">Registro de receitas e despesas com gráficos de categoria e saldo mensal. Trabalha visualização de dados e organização de um projeto um pouco maior, com múltiplas telas/componentes.</p>
+      <div class="tech-row"><span class="tech">React</span><span class="tech">Chart.js</span><span class="tech">CSS</span></div>
+      <div class="links"><a href="#">Ver código →</a><a href="#">Demo →</a></div>
+    </div>
+
+    <div class="card reveal">
+      <div class="commit-hash">commit f402a17</div>
+      <div class="commit-msg">Encurtador de links com API própria</div>
+      <p class="commit-desc">Backend simples que recebe uma URL longa, gera um código curto e redireciona o usuário, salvando os links em um banco de dados. Primeira incursão em backend e persistência real.</p>
+      <div class="tech-row"><span class="tech">Node.js</span><span class="tech">Express</span><span class="tech">SQLite/PostgreSQL</span></div>
+      <div class="links"><a href="#">Ver código →</a><a href="#">Demo →</a></div>
+    </div>
+
+    <div class="card reveal" style="grid-column:1 / -1;">
+      <div class="commit-hash">commit e91cb3a</div>
+      <div class="commit-msg">Blog fullstack com autenticação</div>
+      <p class="commit-desc">Aplicação completa onde usuários criam conta, fazem login e publicam posts. Une frontend, backend, banco de dados e autenticação — bom projeto de "fechamento" para mostrar visão de sistema completo.</p>
+      <div class="tech-row"><span class="tech">React</span><span class="tech">Node.js</span><span class="tech">PostgreSQL</span><span class="tech">JWT</span></div>
+      <div class="links"><a href="#">Ver código →</a><a href="#">Demo →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTATO ============ -->
+<section id="contato">
+  <h2 class="eyebrow reveal">// 04</h2>
+  <div class="win reveal">
+    <div class="win-bar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="win-title">contato.sh</span>
+    </div>
+    <div class="win-body">
+<div class="comment">#!/bin/bash</div>
+<div style="margin-top:10px;"><span class="var-name">EMAIL</span>=<span class="var-val">"seu.email@exemplo.com"</span></div>
+<div><span class="var-name">GITHUB</span>=<span class="var-val">"github.com/BrunaFerreira50"</span></div>
+<div><span class="var-name">LINKEDIN</span>=<span class="var-val">"linkedin.com/in/bruna-ferreira-3b02b91b2"</span></div>
+<div style="margin-top:14px;"><span class="fn">echo</span> <span class="var-val">"Aberto(a) a oportunidades de estágio — vamos conversar!"</span></div>
+    </div>
+    <div class="win-body" style="padding-top:0;">
+      <div class="contact-cta">
+        <a href="mailto:seu.email@exemplo.com" class="primary">Enviar e-mail</a>
+        <a href="https://github.com/BrunaFerreira50" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/bruna-ferreira-3b02b91b2/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Bruna Ferreira ☕
+</footer>
+
+<script>
+  // realça a aba ativa conforme o scroll
+  const links = document.querySelectorAll('#tabs a');
+  const sections = [...links].map(l => document.querySelector(l.getAttribute('href')));
+  const setActive = () => {
+    let idx = 0;
+    sections.forEach((s, i) => { if (s.getBoundingClientRect().top - 80 <= 0) idx = i; });
+    links.forEach(l => l.classList.remove('active'));
+    links[idx].classList.add('active');
+  };
+  document.addEventListener('scroll', setActive, { passive: true });
+  setActive();
+
+  // animação de entrada ao rolar a página
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
